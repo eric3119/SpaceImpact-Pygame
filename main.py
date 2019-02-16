@@ -24,7 +24,7 @@ def main():
     screen = pygame.display.set_mode((screen_width, screen_height))
     
     # load image (it is in same directory)
-    image = pygame.image.load("space.png")
+    image = pygame.image.load("spaceship.png")
     # set the colorkey, so the pink border is not visible anymore
     image.set_colorkey((255,0,255))
     # set the alpha value to 128 (0 fully transparent, 255 opaque)
@@ -83,28 +83,32 @@ def main():
             running = False
             
         if evento.type == pygame.KEYUP:
-            print("up")
-            still_down = False
+            if evento.key != pygame.K_SPACE:
+                still_down = False
 
         if evento.type == pygame.KEYDOWN:
-            print("down")
-            if still_down:                
-                pygame.event.post(evento)
-            else:
-                still_down = True                
-                key_pressed = evento.key               
+            
+            if evento.key == pygame.K_ESCAPE:
+                running = False                
+
+            if evento.key == pygame.K_SPACE:
+                print("shot")
+                evento = None
+            if evento:
+                if still_down:                
+                    pygame.event.post(evento)
+                else:
+                    still_down = True                
+                    arrow_pressed = evento.key               
 
         if still_down:
-            print("action")
-            if key_pressed == pygame.K_ESCAPE:
-                running = False
-            elif key_pressed == pygame.K_UP:
+            if arrow_pressed == pygame.K_UP:
                 ypos -= step_y                    
-            elif key_pressed == pygame.K_DOWN:
+            elif arrow_pressed == pygame.K_DOWN:
                 ypos += step_y 
-            elif key_pressed == pygame.K_LEFT:
+            elif arrow_pressed == pygame.K_LEFT:
                 xpos -= step_x 
-            elif key_pressed == pygame.K_RIGHT:
+            elif arrow_pressed == pygame.K_RIGHT:
                 xpos += step_x      
         # check if the smily is still on screen, if not change direction
         # if xpos>screen_width-64 or xpos<0:
