@@ -1,27 +1,13 @@
 #!/usr/bin/env python
-#
-#
-#
-#
-#
-
-# documentation string of this module
-"""
-tutorial 01: first blit
-"""
-# some informational variables
 __author__    = "$Author: DR0ID $"
 __version__   = "$Revision: 112 $"
 __date__      = "$Date: 2007-04-03 18:09:43 +0200 (Di, 03 Apr 2007) $"
 __license__   = 'public domain'
 __copyright__ = "DR0ID (c) 2007   http://mypage.bluewin.ch/DR0ID"
 
-#----------------------------- actual code --------------------------------
 
-# import the pygame module, so you can use it
 import pygame
 
-# define a main function
 def main():
     
     # initialize the pygame module
@@ -33,8 +19,8 @@ def main():
     pygame.display.set_caption("movement")
     
     # create a surface on screen that has the size of 240 x 180
-    screen_width = 800
-    screen_height = 600
+    screen_width = 480
+    screen_height = 320
     screen = pygame.display.set_mode((screen_width, screen_height))
     
     # load image (it is in same directory)
@@ -56,8 +42,8 @@ def main():
     xpos = 50
     ypos = 50
     # how many pixels we move our smily each frame
-    step_x = 10
-    step_y = 10
+    step_x = 5
+    step_y = 5
     
     # and blit it on screen
     screen.blit(image, (xpos, ypos))
@@ -70,29 +56,56 @@ def main():
     
     # define a variable to control the main loop
     running = True
+    still_down = False
+    key_pressed = None
     # main loop
     while running:
         # event handling, gets all event from the eventqueue
-        for event in pygame.event.get():
-            # only do something if the event if of type QUIT
-            if event.type == pygame.QUIT:
-                # change the value to False, to exit the main loop
-                running = False
-            # check for keypress and check if it was Esc
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    running = False
-                elif event.key == pygame.K_UP:
-                    ypos -= step_y                    
-                elif event.key == pygame.K_DOWN:
-                    ypos += step_y 
-                elif event.key == pygame.K_LEFT:
-                    xpos -= step_x 
-                elif event.key == pygame.K_RIGHT:
-                    xpos += step_x
+        # for event in pygame.event.get():
+        #     # only do something if the event if of type QUIT
+        #     if event.type == pygame.QUIT:
+        #         # change the value to False, to exit the main loop
+        #         running = False
+        #     # check for keypress and check if it was Esc
+        #     if event.type == pygame.KEYUP:
+        #         print("up")
+        #         still_down = False  
 
-
+        #     if event.type == pygame.KEYDOWN:
+        #         print("down")
                 
+        #         still_down = True                
+        #         key_pressed = event.key
+
+        evento = pygame.event.poll()
+
+        if evento.type == pygame.QUIT:            
+            running = False
+            
+        if evento.type == pygame.KEYUP:
+            print("up")
+            still_down = False
+
+        if evento.type == pygame.KEYDOWN:
+            print("down")
+            if still_down:                
+                pygame.event.post(evento)
+            else:
+                still_down = True                
+                key_pressed = evento.key               
+
+        if still_down:
+            print("action")
+            if key_pressed == pygame.K_ESCAPE:
+                running = False
+            elif key_pressed == pygame.K_UP:
+                ypos -= step_y                    
+            elif key_pressed == pygame.K_DOWN:
+                ypos += step_y 
+            elif key_pressed == pygame.K_LEFT:
+                xpos -= step_x 
+            elif key_pressed == pygame.K_RIGHT:
+                xpos += step_x      
         # check if the smily is still on screen, if not change direction
         # if xpos>screen_width-64 or xpos<0:
         #     step_x = -step_x
@@ -112,7 +125,7 @@ def main():
         
         # this will slow it down to 10 fps, so you can watch it, 
         # otherwise it would run too fast
-        clock.tick(10)
+        clock.tick(20)
             
 # run the main function only if this module is executed as the main script
 # (if you import this as a module then nothing is executed)
