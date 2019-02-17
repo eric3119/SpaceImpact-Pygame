@@ -1,12 +1,15 @@
 #!/usr/bin/env python
-__author__    = "$Author: DR0ID $"
-__version__   = "$Revision: 112 $"
-__date__      = "$Date: 2007-04-03 18:09:43 +0200 (Di, 03 Apr 2007) $"
-__license__   = 'public domain'
-__copyright__ = "DR0ID (c) 2007   http://mypage.bluewin.ch/DR0ID"
-
 
 import pygame
+
+class Shot(object):
+    """docstring for Shot"""
+
+    
+    def __init__(self, arg):
+        super(Shot, self).__init__()
+        self.arg = arg
+
 
 def main():
     
@@ -16,7 +19,7 @@ def main():
     # load and set the logo
     logo = pygame.image.load("logo32x32.png")
     pygame.display.set_icon(logo)
-    pygame.display.set_caption("movement")
+    pygame.display.set_caption("Space Impact")
     
     # create a surface on screen that has the size of 240 x 180
     screen_width = 480
@@ -24,9 +27,10 @@ def main():
     screen = pygame.display.set_mode((screen_width, screen_height))
     
     # load image (it is in same directory)
-    image = pygame.image.load("spaceship.png")
+    ship = pygame.image.load("spaceship.png")
+    shot = pygame.image.load("shot.png")
     # set the colorkey, so the pink border is not visible anymore
-    image.set_colorkey((255,0,255))
+    ship.set_colorkey((255,0,255))
     # set the alpha value to 128 (0 fully transparent, 255 opaque)
     
     #bgd_image = pygame.image.load("background.png")
@@ -46,7 +50,7 @@ def main():
     step_y = 5
     
     # and blit it on screen
-    screen.blit(image, (xpos, ypos))
+    screen.blit(ship, (xpos, ypos))
     
     # update the screen to make the changes visible (fullscreen update)
     pygame.display.flip()
@@ -123,7 +127,8 @@ def main():
         # first erase the screen (just blit the background over anything on screen)
      #   screen.blit(bgd_image, (0,0))
         # now blit the smily on screen
-        screen.blit(image, (xpos, ypos))
+        screen.blit(ship, (xpos, ypos))
+        screen.blit(shot, (xpos+54, ypos+17))
         # and update the screen (dont forget that!)
         pygame.display.flip()
         
