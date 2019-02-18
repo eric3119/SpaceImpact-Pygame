@@ -4,13 +4,20 @@ import pygame
 
 class Shot:
     """docstring for Shot"""
-    
-    ypos = 0
-    xpos = 0
 
-    def __init__(self, arg):
+    def isOnScreen(self):
+        return self.onScreen
+
+    def update(self, boundary):
+        self.xpos += 10
+        if self.xpos > boundary:
+            self.onScreen = False
+
+    def __init__(self, xpos, ypos):
         super(Shot, self).__init__()
-        self.arg = arg
+        self.xpos = xpos
+        self.ypos = ypos
+        self.onScreen = True
 
 
 def main():
@@ -47,6 +54,8 @@ def main():
     
     running = True
 
+    shots = []
+
     still_down = False
     key_pressed = None
 
@@ -72,6 +81,8 @@ def main():
             if evento.key == pygame.K_SPACE:
                 #print("shot")
 
+                shots.append(Shot(xpos+54, ypos+17))
+
                 evento = None
             if evento:
                 if still_down:                
@@ -93,11 +104,24 @@ def main():
         screen.fill((116,166,129))
         
         screen.blit(ship, (xpos, ypos))
-        screen.blit(shot, (xpos+54, ypos+17))
-        
+
+        for projec in shots:
+            screen.blit(shot, (projec.xpos, projec.ypos))
+            projec.update(screen_width)
+
         pygame.display.flip()
+
+        for i in range(len(shots)):
+            try:
+                if not shots[i].isOnScreen():
+                    del shots[i]
+            except IndexError:
+                pass
+
         
         clock.tick(30)#fps
-            
+    #end running    
 if __name__=="__main__":
+
+    
     main()
