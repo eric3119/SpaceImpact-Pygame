@@ -44,6 +44,7 @@ def main():
     enemies = []
     enemy_limit = 3
     enemy_control = 0
+    collisions = [[0 for x in range(screen_width)] for y in range(screen_height)]
 
     still_down = False
     key_pressed = None
@@ -101,10 +102,12 @@ def main():
         for enem in enemies:
             screen.blit(enemy_img, (enem.xpos, enem.ypos))
             enem.update()
-            if enem.xpos in [x for x in range(xpos,xpos+40)]:
-                if enem.ypos in [y for y in range(ypos-54, ypos)]:
-                    print('colision detected')
-                    running = False
+            if enem.xpos < xpos + 54 and enem.xpos + 40 > xpos and enem.ypos < ypos + 40 and 54 + enem.ypos > ypos:
+                running = False
+            for projec in shots:
+                if projec.xpos < enem.xpos + 40 and projec.xpos + 10 > enem.xpos and projec.ypos < enem.ypos + 40 and 6 + projec.ypos > enem.ypos:
+                    enem.destroy()
+        
             
 
         pygame.display.flip()
@@ -121,7 +124,7 @@ def main():
                     del enemies[i]
             except IndexError:
                 pass
-
+        
         
         clock.tick(30)#fps
     #end running    

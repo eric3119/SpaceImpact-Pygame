@@ -1,5 +1,8 @@
 class Enemy:
 
+    def destroy(self):
+        self.onScreen = False
+    
     def isOnScreen(self):
         return self.onScreen
 
