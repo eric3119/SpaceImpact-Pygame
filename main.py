@@ -1,24 +1,9 @@
 #!/usr/bin/env python
 
 import pygame
-
-class Shot:
-    """docstring for Shot"""
-
-    def isOnScreen(self):
-        return self.onScreen
-
-    def update(self, boundary):
-        self.xpos += 10
-        if self.xpos > boundary:
-            self.onScreen = False
-
-    def __init__(self, xpos, ypos):
-        super(Shot, self).__init__()
-        self.xpos = xpos
-        self.ypos = ypos
-        self.onScreen = True
-
+import shot
+import enemy
+import random
 
 def main():
     
@@ -33,7 +18,8 @@ def main():
     screen = pygame.display.set_mode((screen_width, screen_height))
     
     ship = pygame.image.load("spaceship.png")
-    shot = pygame.image.load("shot.png")
+    enemy_img = pygame.image.load("enemy.png")
+    shot_img = pygame.image.load("shot.png")
     
     # set the colorkey, so the pink border is not visible anymore
     # ship.set_colorkey((255,0,255))
@@ -55,6 +41,9 @@ def main():
     running = True
 
     shots = []
+    enemies = []
+    enemy_limit = 3
+    enemy_control = 0
 
     still_down = False
     key_pressed = None
@@ -79,10 +68,7 @@ def main():
                 running = False                
 
             if evento.key == pygame.K_SPACE:
-                #print("shot")
-
-                shots.append(Shot(xpos+54, ypos+17))
-
+                shots.append(shot.Shot(xpos+54, ypos+17))
                 evento = None
             if evento:
                 if still_down:                
@@ -106,8 +92,20 @@ def main():
         screen.blit(ship, (xpos, ypos))
 
         for projec in shots:
-            screen.blit(shot, (projec.xpos, projec.ypos))
-            projec.update(screen_width)
+            screen.blit(shot_img, (projec.xpos, projec.ypos))
+            projec.update(boundary = screen_width)
+
+        if len(enemies) < enemy_limit:
+            enemies.append(enemy.Enemy(xpos = screen_width, ypos= random.random()*screen_height))
+        
+        for enem in enemies:
+            screen.blit(enemy_img, (enem.xpos, enem.ypos))
+            enem.update()
+            if enem.xpos in [x for x in range(xpos,xpos+40)]:
+                if enem.ypos in [y for y in range(ypos-54, ypos)]:
+                    print('colision detected')
+                    running = False
+            
 
         pygame.display.flip()
 
@@ -117,11 +115,15 @@ def main():
                     del shots[i]
             except IndexError:
                 pass
+        for i in range(len(enemies)):
+            try:
+                if not enemies[i].isOnScreen():
+                    del enemies[i]
+            except IndexError:
+                pass
 
         
         clock.tick(30)#fps
     #end running    
-if __name__=="__main__":
-
-    
+if __name__=="__main__":    
     main()
