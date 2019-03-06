@@ -17,7 +17,7 @@ def main():
     screen_height = 320
     screen = pygame.display.set_mode((screen_width, screen_height))
     
-    ship = pygame.image.load("spaceship.png")
+    ship_img = pygame.image.load("spaceship.png")
     enemy_img = pygame.image.load("enemy.png")
     shot_img = pygame.image.load("shot.png")
     
@@ -31,7 +31,7 @@ def main():
     step_x = 5
     step_y = 5
     
-    screen.blit(ship, (xpos, ypos))
+    screen.blit(ship_img, (xpos, ypos))
     
     pygame.display.flip()
     
@@ -43,14 +43,14 @@ def main():
     shots = []
     enemies = []
     enemy_limit = 3
-    enemy_control = 0
+    enemy_control = 0 #time
     collisions = [[0 for x in range(screen_width)] for y in range(screen_height)]
 
     still_down = False
     key_pressed = None
 
-    xmax = screen_width - 54 #spaceship width
-    ymax = screen_height - 40 #spaceship height
+    xmax = screen_width - ship_img.get_width() #spaceship width
+    ymax = screen_height - ship_img.get_height() #spaceship height
     
     while running:
         
@@ -69,7 +69,7 @@ def main():
                 running = False                
 
             if evento.key == pygame.K_SPACE:
-                shots.append(shot.Shot(xpos+54, ypos+17))
+                shots.append(shot.Shot(xpos+ship_img.get_width(), ypos+(ship_img.get_height()//2 - shot_img.get_height()//2)))
                 evento = None
             if evento:
                 if still_down:                
@@ -90,7 +90,7 @@ def main():
                 
         screen.fill((116,166,129))
         
-        screen.blit(ship, (xpos, ypos))
+        screen.blit(ship_img, (xpos, ypos))
 
         for projec in shots:
             screen.blit(shot_img, (projec.xpos, projec.ypos))
@@ -102,13 +102,14 @@ def main():
         for enem in enemies:
             screen.blit(enemy_img, (enem.xpos, enem.ypos))
             enem.update()
-            if enem.xpos < xpos + 54 and enem.xpos + 40 > xpos and enem.ypos < ypos + 40 and 54 + enem.ypos > ypos:
+            #colision enemy ship
+            if enem.xpos < xpos + ship_img.get_width() and enem.xpos + ship_img.get_height() > xpos and enem.ypos < ypos + ship_img.get_height() and ship_img.get_width() + enem.ypos > ypos:
                 running = False
+            #colision enemy shot
             for projec in shots:
-                if projec.xpos < enem.xpos + 40 and projec.xpos + 10 > enem.xpos and projec.ypos < enem.ypos + 40 and 6 + projec.ypos > enem.ypos:
+                if projec.xpos < enem.xpos + enemy_img.get_width() and projec.xpos + shot_img.get_width() > enem.xpos and projec.ypos < enem.ypos + enemy_img.get_height() and shot_img.get_width() + projec.ypos > enem.ypos:
                     enem.destroy()
-        
-            
+                    projec.destroy()
 
         pygame.display.flip()
 

@@ -1,6 +1,9 @@
 class Shot:
     """docstring for Shot"""
 
+    def destroy(self):
+        self.onScreen = False
+
     def isOnScreen(self):
         return self.onScreen
 
