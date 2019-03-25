@@ -11,8 +11,7 @@ class Enemy:
         if self.xpos < boundary:
             self.onScreen = False
 
-    def __init__(self, xpos, ypos, speed):
-        super(Enemy, self).__init__()
+    def __init__(self, xpos, ypos, speed):        
         self.xpos = xpos
         self.ypos = ypos
         self.speed = speed

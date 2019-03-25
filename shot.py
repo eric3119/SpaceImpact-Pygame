@@ -13,7 +13,7 @@ class Shot:
             self.onScreen = False
 
     def __init__(self, xpos, ypos):
-        super(Shot, self).__init__()
+        # super(Shot, self).__init__()
         self.xpos = xpos
         self.ypos = ypos
         self.onScreen = True
