@@ -12,8 +12,7 @@ class Shot:
         if self.xpos > boundary:
             self.onScreen = False
 
-    def __init__(self, xpos, ypos):
-        # super(Shot, self).__init__()
+    def __init__(self, xpos, ypos):        
         self.xpos = xpos
         self.ypos = ypos
         self.onScreen = True
